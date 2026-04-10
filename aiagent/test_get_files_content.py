@@ -1,4 +1,4 @@
-from functions.get_files_content import get_file_content
+from aiagent.functions.get_file_content import get_file_content
 
 
 def main():

@@ -1,8 +1,10 @@
 import os
 from dotenv import load_dotenv
-from google import genai
 import argparse
 from google.genai import types
+from google import genai
+from prompt import system_prompt
+from functions.call_function import available_functions
 
 
 def main():
@@ -24,16 +26,20 @@ def main():
         role='user', parts=[types.Part.from_text(text=args.user_prompt)])
 
     response = client.models.generate_content(
-        model='gemini-2.5-flash', contents=messages)
+        model='gemini-2.5-flash',
+        contents=messages,
+        config=types.GenerateContentConfig(
+            system_instruction=system_prompt,
+            tools=[available_functions],
+        )
+    )
 
-    print(response.text)
-    if response is None or response.usage_metadata is None:
-        print("response is malformed")
-        return
-    if args.verbose:
-        print(f"User prompt: {args.user_prompt}")
-    print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-    print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+    if response.function_calls:
+        for function_call in response.function_calls:
+            print(
+                f"Calling function: {function_call.name}({function_call.args})")
+    else:
+        print(response.text)
 
 
 main()
