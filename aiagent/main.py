@@ -4,7 +4,7 @@ import argparse
 from google.genai import types
 from google import genai
 from prompt import system_prompt
-from functions.call_function import available_functions
+from functions.call_function import available_functions, call_function
 
 
 def main():
@@ -36,8 +36,36 @@ def main():
 
     if response.function_calls:
         for function_call in response.function_calls:
-            print(
-                f"Calling function: {function_call.name}({function_call.args})")
+            # print(
+            #    f"Calling function: {function_call.name}({function_call.args})")
+            function_call_response = call_function(
+                function_call, verbose=args.verbose)
+            # if the function_call_response object has an empty parts list, we will print an error message
+            if not function_call_response.parts:
+                print(
+                    f"Error: function {function_call.name} returned an empty response"
+                )
+            # if the first part of the function_call_response has an empty response, we will print an error message
+            if not function_call_response.parts[0]:
+                print(
+                    f"Error: function {function_call.name} returned an empty response"
+                )
+            if not function_call_response.parts[0].function_response:
+                print(
+                    f"Error: function {function_call.name} returned an empty response"
+                )
+            if not function_call_response.parts[0].function_response.response:
+                print(
+                    f"Error: function {function_call.name} returned an empty response"
+                )
+            # whew, that was a lot of checks, now we can safely print the response
+            # now we know that the function returned some response
+            # TO DO HERE!!! comint up later
+
+            if args.verbose:
+                print(
+                    f"Function {function_call.name} returned response: {function_call_response.parts[0].function_response.response}"
+                )
     else:
         print(response.text)
 

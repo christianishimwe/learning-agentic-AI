@@ -3,7 +3,6 @@ from functions.get_files_info import schema_get_files_info, get_files_info
 from functions.get_file_content import schema_get_file_content, get_file_content
 from functions.run_python_file import schema_run_python_file, run_python_file
 from functions.write_file import schema_write_file, write_file
-fr
 
 available_functions = types.Tool(
     function_declarations=[schema_get_files_info,
@@ -38,3 +37,19 @@ def call_function(function_call, verbose=False):
         )
     # let's make our copy of the args
     # this way if the args is NOne, the dict will be empty and not throw an error
+    our_args = dict(function_call.args) if function_call.args else {}
+    # let's now set the working directory
+    working_directory = "./calculator"
+    our_args["working_directory"] = working_directory
+    # now let's call the function
+    function_result = function_map[function_name](
+        **our_args)  # this result will be a string
+    return types.Content(
+        role="tool",
+        parts=[
+            types.Part.from_function_response(
+                name=function_name,
+                response={"result": function_result}
+            )
+        ]
+    )
