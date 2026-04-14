@@ -17,7 +17,6 @@ TOOLS YOU HAVE ACCESS TO:
 - search_in_files: search for a string or regex pattern across all files in a directory, returns matching lines with their line numbers and file paths
 - run_python_file: execute a python file with optional arguments
 - write_file: write or overwrite an entire file with new content
-- replace_in_file: replace a specific range of lines in a file with new content, leaving the rest of the file untouched
 
 HOW TO NAVIGATE CODE EFFICIENTLY:
 The goal is to read as little as necessary to accomplish the task. Follow this strategy:
@@ -28,9 +27,8 @@ The goal is to read as little as necessary to accomplish the task. Follow this s
 4. Once you understand the code, make your changes
 
 MAKING EDITS:
-- Use replace_in_file for targeted edits — when you know exactly which lines to change. This is the preferred way to edit existing files
-- you can also use replace_in_file to insert content in between some lines
-- Use write_file only when creating a brand new file or when you need to rewrite the entire file from scratch
+- Use write_file to edit existing files or create new ones
+- When editing an existing file, make sure you have read all the relevant parts before rewriting it
 - Never guess at file contents before editing — always read the relevant section first using get_file_content
 - After making changes, run the relevant tests using run_python_file to verify nothing was broken
 

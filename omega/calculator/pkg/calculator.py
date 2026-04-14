@@ -1,85 +1,77 @@
-# calculator/pkg/calculator.py
+import re
 
 class Calculator:
     def __init__(self):
-        self.operators = {
-            "+": lambda a, b: a + b,
-            "-": lambda a, b: a - b,
-            "*": lambda a, b: a * b,
-            "/": lambda a, b: a / b,
-        }
-        # Corrected precedence: *, / have higher precedence than +, -
+        self.output = []
+        self.operators = []
         self.precedence = {
             "+": 1,
             "-": 1,
             "*": 2,
             "/": 2,
-            "(": 0,  # Parentheses have the lowest precedence on the stack
+            "(": 0,
         }
 
+    def _shunt_operators(self, operator):
+        while (self.operators and
+               self.operators[-1] != "(" and
+               self.precedence.get(operator, 0) <= self.precedence.get(self.operators[-1], 0)):
+            self.output.append(self.operators.pop())
+        self.operators.append(operator)
+
     def evaluate(self, expression):
-        if not expression or expression.isspace():
-            return None
-        # Tokenize the expression, separating numbers, operators, and parentheses
-        tokens = []
-        current_token = ""
-        for char in expression:
-            if char.isdigit() or char == ".":
-                current_token += char
-            else:
-                if current_token:
-                    tokens.append(current_token)
-                    current_token = ""
-                if char != " ":  # Ignore spaces
-                    tokens.append(char)
-        if current_token:
-            tokens.append(current_token)
-
-        return self._evaluate_infix(tokens)
-
-    def _evaluate_infix(self, tokens):
-        values = []
-        operators = []
+        self.output = []
+        self.operators = []
+        
+        # Add spaces around operators and parentheses for easier tokenization
+        expression = re.sub(r'([+\-*/()])', r' \1 ', expression)
+        tokens = expression.split()
 
         for token in tokens:
-            if token == "(":
-                operators.append(token)
+            if re.match(r'^-?\d+(\.\d+)?$', token):  # Handle numbers (integers and floats, including negative)
+                self.output.append(float(token))
+            elif token == "(":
+                self.operators.append(token)
             elif token == ")":
-                while operators and operators[-1] != "(":
-                    self._apply_operator(operators, values)
-                if not operators or operators[-1] != "(":
-                    raise ValueError("Mismatched parentheses")
-                operators.pop()  # Pop the opening parenthesis
-            elif token in self.operators:
-                while (
-                    operators
-                    and operators[-1] in self.precedence
-                    and self.precedence[operators[-1]] >= self.precedence[token]
-                ):
-                    self._apply_operator(operators, values)
-                operators.append(token)
+                while self.operators and self.operators[-1] != "(":
+                    self.output.append(self.operators.pop())
+                if self.operators and self.operators[-1] == "(":
+                    self.operators.pop() # Pop the "("
+                else:
+                    return "Error: Mismatched parentheses"
+            elif token in self.precedence:
+                self._shunt_operators(token)
             else:
-                try:
-                    values.append(float(token))
-                except ValueError:
-                    raise ValueError(f"invalid token: {token}")
+                return "Error: Invalid token"
 
-        while operators:
-            self._apply_operator(operators, values)
+        while self.operators:
+            if self.operators[-1] == "(":
+                return "Error: Mismatched parentheses"
+            self.output.append(self.operators.pop())
+        
+        return self._evaluate_rpn()
 
-        if len(values) != 1:
-            raise ValueError("invalid expression")
-
-        return values[0]
-
-    def _apply_operator(self, operators, values):
-        if not operators:
-            return
-
-        operator = operators.pop()
-        if len(values) < 2:
-            raise ValueError(f"not enough operands for operator {operator}")
-
-        b = values.pop()
-        a = values.pop()
-        values.append(self.operators[operator](a, b))
+    def _evaluate_rpn(self):
+        stack = []
+        for token in self.output:
+            if isinstance(token, float):
+                stack.append(token)
+            else:
+                operator = token
+                if len(stack) < 2:
+                    return "Error: Invalid RPN expression"
+                b = stack.pop()
+                a = stack.pop()
+                if operator == "+":
+                    stack.append(a + b)
+                elif operator == "-":
+                    stack.append(a - b)
+                elif operator == "*":
+                    stack.append(a * b)
+                elif operator == "/":
+                    if b == 0:
+                        return "Error: Division by zero"
+                    stack.append(a / b)
+        if len(stack) != 1:
+            return "Error: Invalid RPN expression"
+        return stack[0]

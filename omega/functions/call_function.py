@@ -5,6 +5,7 @@ from functions.run_python_file import schema_run_python_file, run_python_file
 from functions.write_file import schema_write_file, write_file
 from functions.search_in_files import search_in_files
 from functions.think import think
+from functions.replace_in_file import replace_in_file
 
 
 def call_function(function_call, verbose=False):
@@ -18,8 +19,8 @@ def call_function(function_call, verbose=False):
         "write_file": write_file,
         "run_python_file": run_python_file,
         "search_in_files": search_in_files,
-        "think": think
-
+        "think": think,
+        "replace_in_file": replace_in_file
     }
     # let's check if the function is in the map
     function_name = function_call.name or ""  # will be "" if name is None
