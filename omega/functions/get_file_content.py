@@ -60,7 +60,7 @@ schema_get_file_content = types.FunctionDeclaration(
             ),
             "first_line": types.Schema(
                 type=types.Type.INTEGER,
-                description="the first line to start reading from. the first one is always 1 by default"
+                description="the first line to start reading from. the first one is 1 by default"
             ),
             "num_lines": types.Schema(
                 type=types.Type.INTEGER,

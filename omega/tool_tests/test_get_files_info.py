@@ -3,10 +3,10 @@ import os
 
 
 def main():
-    print(get_files_info("calculator", "."))
-    print(get_files_info("calculator", "pkg"))
-    print(get_files_info("calculator", "/bin"))
-    print(get_files_info("calculator", "../"))
+    print(get_files_info("omega_working_directory", "."))
+    print(get_files_info("omega_working_directory", "pkg"))
+    print(get_files_info("omega_working_directory", "/bin"))
+    print(get_files_info("omega_working_directory", "../"))
 
 
 main()

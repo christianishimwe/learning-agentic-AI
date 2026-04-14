@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import argparse
 from google.genai import types
 from google import genai
-from prompt import system_prompt
+from fake_prompt import system_prompt
 from functions.call_function import call_function
 from agent_tools.tools import available_functions
 import sys

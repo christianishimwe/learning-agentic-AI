@@ -39,7 +39,7 @@ def call_function(function_call, verbose=False):
     our_args = dict(function_call.args) if function_call.args else {}
     # let's now set the working directory (not needed for think)
     if function_name != "think":
-        working_directory = "./calculator"
+        working_directory = "./omega_working_directory"
         our_args["working_directory"] = working_directory
     # now let's call the function
     function_result = function_map[function_name](

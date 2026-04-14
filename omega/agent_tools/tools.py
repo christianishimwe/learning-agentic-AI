@@ -13,5 +13,6 @@ available_functions = types.Tool(
                            schema_write_file,
                            schema_run_python_file,
                            schema_search_in_files,
+                           schema_replace_in_file,
                            schema_think],
 )
