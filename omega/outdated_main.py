@@ -3,9 +3,9 @@ from dotenv import load_dotenv
 import argparse
 from google.genai import types
 from google import genai
-from fake_prompt import system_prompt
+from outdated_prompt import system_prompt
 from functions.call_function import call_function
-from agent_tools.tools import available_functions
+from agent_tools.outdated_tools import available_functions
 import sys
 
 
@@ -29,20 +29,7 @@ def main():
     messages = [types.Content(
         role='user', parts=[types.Part.from_text(text=args.user_prompt)])]
     # let's build the feedback loop
-    think_config = None
     for i in range(20):
-        # force the model to think
-        if i == 0:
-            # create the thinking tool
-            think_config = types.ToolConfig(
-                function_calling_config=types.FunctionCallingConfig(
-                    mode="ANY",
-                    allowed_function_names=["think"]
-                )
-            )
-        else:
-            think_config = None
-
         # execute normally
         response = client.models.generate_content(
             model='gemini-2.5-flash',
@@ -50,7 +37,6 @@ def main():
             config=types.GenerateContentConfig(
                 system_instruction=system_prompt,
                 tools=[available_functions],
-                tool_config=think_config
             )
         )
         # count the tokens:
