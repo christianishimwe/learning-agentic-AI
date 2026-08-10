@@ -3,8 +3,9 @@ from dotenv import load_dotenv
 import argparse
 from google.genai import types
 from google import genai
-from prompt import system_prompt
-from functions.call_function import available_functions, call_function
+from outdated_prompt import system_prompt
+from functions.call_function import call_function
+from agent_tools.outdated_tools import available_functions
 import sys
 
 
@@ -22,11 +23,14 @@ def main():
                         help="Enable verbose output")
     args = parser.parse_args()
 
+    total_tokens_used = 0
+
     # append the new message
     messages = [types.Content(
         role='user', parts=[types.Part.from_text(text=args.user_prompt)])]
     # let's build the feedback loop
     for i in range(20):
+        # execute normally
         response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=messages,
@@ -35,6 +39,8 @@ def main():
                 tools=[available_functions],
             )
         )
+        # count the tokens:
+        total_tokens_used += response.usage_metadata.total_token_count
         # now add the model's response to the messages
         if response.candidates:
             for candidate in response.candidates:
@@ -97,6 +103,8 @@ def main():
     else:
         print("Error: max iterations reached without a final response")
         sys.exit(1)
+
+    print(f"\n\n total tokens: {total_tokens_used}")
 
 
 main()

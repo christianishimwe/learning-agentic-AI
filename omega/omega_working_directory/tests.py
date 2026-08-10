@@ -33,8 +33,8 @@ class TestCalculator(unittest.TestCase):
         self.assertEqual(result, 7)
 
     def test_empty_expression(self):
-        result = self.calculator.evaluate("")
-        self.assertIsNone(result)
+        with self.assertRaises(ValueError):
+            self.calculator.evaluate("")
 
     def test_invalid_operator(self):
         with self.assertRaises(ValueError):

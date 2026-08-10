@@ -8,17 +8,33 @@ class Calculator:
             "*": lambda a, b: a * b,
             "/": lambda a, b: a / b,
         }
+        # Corrected precedence: *, / have higher precedence than +, -
         self.precedence = {
             "+": 1,
             "-": 1,
             "*": 2,
             "/": 2,
+            "(": 0,  # Parentheses have the lowest precedence on the stack
         }
 
     def evaluate(self, expression):
         if not expression or expression.isspace():
             return None
-        tokens = expression.strip().split()
+        # Tokenize the expression, separating numbers, operators, and parentheses
+        tokens = []
+        current_token = ""
+        for char in expression:
+            if char.isdigit() or char == ".":
+                current_token += char
+            else:
+                if current_token:
+                    tokens.append(current_token)
+                    current_token = ""
+                if char != " ":  # Ignore spaces
+                    tokens.append(char)
+        if current_token:
+            tokens.append(current_token)
+
         return self._evaluate_infix(tokens)
 
     def _evaluate_infix(self, tokens):
@@ -26,10 +42,18 @@ class Calculator:
         operators = []
 
         for token in tokens:
-            if token in self.operators:
+            if token == "(":
+                operators.append(token)
+            elif token == ")":
+                while operators and operators[-1] != "(":
+                    self._apply_operator(operators, values)
+                if not operators or operators[-1] != "(":
+                    raise ValueError("Mismatched parentheses")
+                operators.pop()  # Pop the opening parenthesis
+            elif token in self.operators:
                 while (
                     operators
-                    and operators[-1] in self.operators
+                    and operators[-1] in self.precedence
                     and self.precedence[operators[-1]] >= self.precedence[token]
                 ):
                     self._apply_operator(operators, values)

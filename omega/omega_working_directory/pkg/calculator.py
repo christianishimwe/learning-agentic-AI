@@ -34,7 +34,7 @@ class Calculator:
                     tokens.append(char)
         if current_token:
             tokens.append(current_token)
-        
+
         return self._evaluate_infix(tokens)
 
     def _evaluate_infix(self, tokens):
