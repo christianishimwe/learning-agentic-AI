@@ -1,6 +1,6 @@
 # Omega
 
-Omega is a CLI coding agent built on Gemini. It reasons through a task, then uses tools to explore, search, read, edit, and run files in a sandboxed working directory until it produces a final answer.
+Omega is a terminal coding agent built on Gemini. Launch it with `omega` and you're dropped into an interactive session — type instructions directly at the prompt and it reasons through the task, using tools to explore, search, read, edit, and run files in a sandboxed working directory until it produces an answer.
 
 ## Setup
 
@@ -8,8 +8,18 @@ Omega is a CLI coding agent built on Gemini. It reasons through a task, then use
 
 ```bash
 pip install -e .
-echo "GEMINI_API_KEY=your-key-here" > .env
+echo -e "GEMINI_API_KEY=your-key-here\nMAX_CHARS=10000" > .env
 ```
+
+This installs Omega in editable mode and registers the `omega` command globally (via `console_scripts` in `pyproject.toml`), so it works from any directory. The `.env` file lives in the repo root and is found automatically regardless of where you run `omega` from.
+
+For a cleaner global install that isolates Omega's dependencies from your other Python projects, use [pipx](https://pipx.pypa.io/) instead:
+
+```bash
+pipx install .
+```
+
+Note: `pipx install .` performs a non-editable install, so it only works reliably if you've already set `GEMINI_API_KEY` (and `MAX_CHARS`) as real environment variables rather than relying on the repo's `.env` file. Prefer `pip install -e .` for local development.
 
 ### Codespaces
 
@@ -25,6 +35,13 @@ It'll be injected as an environment variable in any Codespace you create from th
 ## Usage
 
 ```bash
-python main.py "your prompt here"
-python main.py "your prompt here" --verbose
+omega
+```
+
+This drops you into an interactive prompt. Type your instruction and press Enter to send it; press `Alt+Enter` (or `Esc` then `Enter`) to insert a newline for multi-line input. Use the up/down arrows to browse command history. Type `exit`, `quit`, or press `Ctrl+C` at the prompt to leave.
+
+Pass `--verbose` to also print each tool call's raw response:
+
+```bash
+omega --verbose
 ```

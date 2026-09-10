@@ -1,5 +1,5 @@
 
-from config import settings
+from ..config import settings
 from google.genai import types
 import os
 

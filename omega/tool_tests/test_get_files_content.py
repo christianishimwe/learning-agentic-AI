@@ -1,4 +1,4 @@
-from functions.get_file_content import get_file_content
+from omega.functions.get_file_content import get_file_content
 
 
 def main():
