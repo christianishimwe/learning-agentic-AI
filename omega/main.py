@@ -17,7 +17,7 @@ from .prompt import system_prompt
 from .functions.call_function import call_function
 from .agent_tools.tools import available_functions
 
-MODEL = "gemini-2.5-flash"
+MODEL = "gemini-3.6-flash"
 MAX_ITERATIONS = 20
 
 TOOL_LABELS = {

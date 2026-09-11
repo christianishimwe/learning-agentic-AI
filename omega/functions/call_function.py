@@ -8,11 +8,12 @@ from .search_in_files import search_in_files
 from .think import think
 from .replace_in_file import replace_in_file
 
-# Anchored to the package location (not the caller's cwd) so the sandbox is
-# found no matter which directory `omega` is launched from.
+# Anchored to the repo root so the sandbox is found
+# no matter which directory `omega` is launched from, and lives alongside
+# the `omega` package rather than inside it.
 WORKING_DIRECTORY = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                 "..", "omega_working_directory")
+                 "..", "..", "omega_working_directory")
 )
 
 

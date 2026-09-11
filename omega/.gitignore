@@ -3,3 +3,4 @@
 __pycache__/
 functions/__pycache__/
 *.egg-info/
+secret.txt
