@@ -1,4 +1,4 @@
-from functions.replace_in_file import replace_in_file
+from omega.functions.replace_in_file import replace_in_file
 
 
 def main():

@@ -1,4 +1,4 @@
-from functions.write_file import write_file
+from omega.functions.write_file import write_file
 
 
 def main():

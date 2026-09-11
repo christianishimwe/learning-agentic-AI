@@ -70,3 +70,7 @@ def reflection_node(state: Sequence[BaseMessage]) -> List[BaseMessage]:
     # reflect on the linkedInPost
     critique = reflection_chain.invoke({"messages": state})
     return [HumanMessage(content=critique.content)]
+
+
+graph.add_node("generation", generation_node)
+graph.add_node("reflection", reflection_node)

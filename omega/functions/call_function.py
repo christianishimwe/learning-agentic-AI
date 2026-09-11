@@ -1,18 +1,23 @@
+import os
 from google.genai import types
-from functions.get_files_info import schema_get_files_info, get_files_info
-from functions.get_file_content import schema_get_file_content, get_file_content
-from functions.run_python_file import schema_run_python_file, run_python_file
-from functions.write_file import schema_write_file, write_file
-from functions.search_in_files import search_in_files
-from functions.think import think
-from functions.replace_in_file import replace_in_file
+from .get_files_info import get_files_info
+from .get_file_content import get_file_content
+from .run_python_file import run_python_file
+from .write_file import write_file
+from .search_in_files import search_in_files
+from .think import think
+from .replace_in_file import replace_in_file
+
+# Anchored to the repo root so the sandbox is found
+# no matter which directory `omega` is launched from, and lives alongside
+# the `omega` package rather than inside it.
+WORKING_DIRECTORY = os.path.normpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "..", "..", "omega_working_directory")
+)
 
 
-def call_function(function_call, verbose=False):
-    if verbose:
-        print(f"Calling function: {function_call.name}({function_call.args})")
-    else:
-        print(f"Calling function: {function_call.name}")
+def call_function(function_call):
     function_map = {
         "get_file_content": get_file_content,
         "get_files_info": get_files_info,
@@ -39,8 +44,7 @@ def call_function(function_call, verbose=False):
     our_args = dict(function_call.args) if function_call.args else {}
     # let's now set the working directory (not needed for think)
     if function_name != "think":
-        working_directory = "./omega_working_directory"
-        our_args["working_directory"] = working_directory
+        our_args["working_directory"] = WORKING_DIRECTORY
     # now let's call the function
     function_result = function_map[function_name](
         **our_args)  # this result will be a string
