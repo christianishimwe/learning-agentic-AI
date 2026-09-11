@@ -2,7 +2,7 @@
 
 > 🎥 **[Watch the demo on Loom](https://www.loom.com/share/dd561cab437c42929b0050cbd41d6945)**
 
-Omega is a terminal coding agent built on Gemini. Launch it with `omega` and you're dropped into an interactive session — type instructions directly at the prompt and it reasons through the task, using tools to explore, search, read, edit, and run files in a sandboxed working directory until it produces an answer.
+Omega is a terminal coding AI agent built on Gemini's SDK. Launch it with `omega` and you're dropped into an interactive session — type instructions directly at the prompt and it reasons through the task, using tools to explore, search, read, edit, and run files in a sandboxed working directory until it produces an answer.
 
 ## Setup
 
